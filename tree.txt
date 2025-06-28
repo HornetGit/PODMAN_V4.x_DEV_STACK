@@ -1,0 +1,74 @@
+.
+├── ARCHITECTURE.md
+├── backend
+│   ├── app
+│   │   ├── db.py
+│   │   ├── __init__.py
+│   │   └── main.py
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── templates
+│   │   ├── db.py.template
+│   │   ├── debug.sh.template
+│   │   ├── Dockerfile.template
+│   │   ├── main.py.template
+│   │   └── wait-for-db.sh.template
+│   └── wait-for-db.sh
+├── cleanup_HDD.sh
+├── config
+│   └── templates
+├── db
+│   ├── Dockerfile
+│   ├── entrypoint.sh
+│   ├── init.sql
+│   ├── pgadmin
+│   └── templates
+│       ├── debug.sh.template
+│       ├── Dockerfile.template
+│       ├── entrypoint.sh.template
+│       └── start_daemon_at_boot.sh
+├── frontend
+│   ├── index.html
+│   ├── nginx.conf
+│   └── templates
+│       ├── debug.sh.template
+│       ├── index.html.template
+│       └── nginx.conf.template
+├── instructions
+│   ├── about_basic_tests.txt
+│   ├── about_env_file.txt
+│   └── about_host.txt
+├── pgadmin
+│   ├── pgadmin-service.yaml
+│   ├── pgadmin-service.yaml.template
+│   ├── pg_service.conf
+│   └── templates
+│       ├── Dockerfile.template
+│       ├── pgadmin-service.yaml.template
+│       └── pg_service.conf.template
+├── podman-compose-dev.yaml
+├── README.md
+├── restart_application.sh
+├── setup_certificates.sh
+├── setup_containers.sh
+├── start_containers.sh
+├── stop_containers.sh
+├── traefik
+│   ├── acme.json
+│   ├── certs
+│   │   ├── localhost-cert.pem
+│   │   ├── localhost-key.pem
+│   │   ├── localtest.me-cert.pem
+│   │   └── localtest.me-key.pem
+│   ├── dynamic.yml
+│   ├── templates
+│   │   ├── Dockerfile.template
+│   │   ├── dynamic.yml.template
+│   │   ├── traefik-service-letsencrypt.yaml.template
+│   │   ├── traefik-service.yaml.template
+│   │   └── traefik.yml.template
+│   ├── traefik-service.yaml
+│   └── traefik.yml
+└── tree.txt
+
+17 directories, 55 files

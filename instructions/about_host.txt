@@ -1,0 +1,4 @@
+    # must be run as root because of selinux
+    host_tag=$(date +"%Y%m%d_%s")
+    cp /etc/hosts /etc/hosts$host_tag
+    echo "127.0.0.1 localhost localtest.me api.localtest.me traefik.localtest.me" >> /etc/hosts

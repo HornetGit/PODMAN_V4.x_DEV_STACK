@@ -1,0 +1,30 @@
+entryPoints:
+  web:
+    address: ":8080"
+  websecure:
+    address: ":8443"
+
+api:
+  dashboard: true
+  debug: true
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    network: miniapp_public
+  # added for mkcert usage
+  file:
+    filename: /etc/traefik/dynamic.yml
+    watch: true
+
+
+
+# to be used later for let's encrypt with a public domain only (in STAGING or PROD)
+# certificatesResolvers:
+#   letsencrypt:
+#     acme:
+#       email: %%TRAEFIK_EMAIL%%
+#       storage: /etc/traefik/acme/acme.json
+#       httpChallenge:
+#         entryPoint: web

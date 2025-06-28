@@ -1,0 +1,43 @@
+# CREATED: 13JUN2025
+# OWNED:XCS HornetGit
+# NOTE: [to be updated for https]
+# TOOL: i use tilix as a terminal emulator
+
+# ########################
+# 0- Open x4 Tillix tty's:
+# ########################
+# a) HOST: check that the containers are set/started: ./restart_application.sh
+# b) db: podman exec -it miniapp_db sh
+# c) frontend: podman exec -it miniapp_frontend sh
+# d) backend: podman exec -it miniapp_backend sh
+
+# ########################
+# 1- functional end user:
+# ########################
+# Access frontend at http://localtest.me:8000 or https://localtest.me:8443
+# Submit message via the HTML form (e.g. "test_user + message")
+# Confirm "✅ saved!" message in frontend
+
+# #########################################
+# 2- Container Logs live check in each tty:
+# #########################################
+# b) podman logs -f miniapp_db
+# c) podman logs -f miniapp_frontend
+# d) podman logs -f miniapp_backend
+
+# ##########################################################################################
+# 3- check db contents was recorded after the end-user tests (from inside the db container):
+# ##########################################################################################
+# b) podman exec -it miniapp_db sh and : psql -U miniapp_user -d miniapp_db -c 'SELECT * FROM messages ORDER BY id DESC LIMIT 5;'
+
+
+# ###############################################
+# 4. Monitor Signals In/Out Inside Each Container:
+# ###############################################
+# b) db: psql -U miniapp_user -d miniapp_db -c 'SELECT COUNT(*) FROM messages;' && echo "✅ DB OK"
+# b) db: psql -U miniapp_user -d miniapp_db -c 'SELECT * FROM messages;' && echo "✅ DB OK"
+# c) frontend: curl -s http://localhost | grep '<h1>' && echo "✅ Frontend responding" 
+# d) backend: ps aux | grep "[u]vicorn" && echo "✅ Backend running"
+# d) backend if a minimalist curl debug is installed for DEV: curl -s -X POST http://localhost:8001/submit -H "Content-Type: application/json" -d '{"message":"debug"}'
+
+

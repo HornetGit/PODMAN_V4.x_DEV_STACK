@@ -1,0 +1,19 @@
+tls:
+  certificates:
+    - certFile: /etc/traefik/certs/localtest.me-cert.pem
+      keyFile: /etc/traefik/certs/localtest.me-key.pem
+      stores:
+        - default
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/certs/localtest.me-cert.pem
+        keyFile: /etc/traefik/certs/localtest.me-key.pem
+        
+http:
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        port: "8443"
+        permanent: true
