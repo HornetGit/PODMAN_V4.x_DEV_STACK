@@ -11,7 +11,9 @@ set -e
 echo "SETTING UP containers and networks..."
 
 # create miniapp directory structure if not existing
-mkdir -p config backend backend/templates backend/app frontend frontend/templates pgadmin traefik traefik/certs traefik/templates db db/pgadmin db/templates instructions
+mkdir -p config backend backend/templates backend/app frontend frontend/templates pgadmin \
+          traefik traefik/certs traefik/templates \
+          logs db db/pgadmin db/templates instructions
 echo "✅ Directories added"
 
 # this code directory is the root of the miniapp
@@ -43,14 +45,14 @@ if ! podman info &> /dev/null; then
     exit 1
 fi
 
-# check repo
+# check postgres repository
 if ! podman search postgres &> /dev/null; then
     echo "❌ Postgres image not found in the available repositorie(s). Please check your Podman setup."
     echo "Hint: see .config/containers/registries.conf for the default registries to seek images"
     exit 1
 fi
 
-# check podman-compose
+# check podman-compose installation
 if ! command -v podman-compose &> /dev/null; then
     echo "❌ podman-compose is NOT installed. Please install podman-compose first (prefer from github)."
     exit 1
@@ -187,13 +189,13 @@ if [ "${MINIAPP_TRAEFIK_ENABLED}" = "true" ]; then
 
   # enable traefik to use the podman user socket (rootless), and NOT the  docker socket (root)
     CURRENT_USER_ID=$(id -u)
-    TRAEFIK_USER_SOCKET="/run/user/${CURRENT_USER_ID}/podman/podman.sock"
-    if [ ! -S "$TRAEFIK_USER_SOCKET" ]; then
-        echo "❌ Podman user socket not found: $TRAEFIK_USER_SOCKET"
+    export MINIAPP_TRAEFIK_PODMAN_SOCK="/run/user/${CURRENT_USER_ID}/podman/podman.sock"
+    if [ ! -S "$MINIAPP_TRAEFIK_PODMAN_SOCK" ]; then
+        echo "❌ Podman user socket not found: $MINIAPP_TRAEFIK_PODMAN_SOCK"
         echo "Please make sure Podman is running and the user socket is available."
         exit 1
     fi
-    echo "✅ Podman user socket found: $TRAEFIK_USER_SOCKET"
+    echo "✅ Podman user socket found: $MINIAPP_TRAEFIK_PODMAN_SOCK"
 
     # generate the traefik-service.yaml from its template
     echo "Generating Traefik service file from template..."
@@ -201,7 +203,7 @@ if [ "${MINIAPP_TRAEFIK_ENABLED}" = "true" ]; then
         -e "s|%%MINIAPP_TRAEFIK_HTTP_PORT%%|${MINIAPP_TRAEFIK_HTTP_PORT}|g" \
         -e "s|%%MINIAPP_TRAEFIK_HTTPS_PORT%%|${MINIAPP_TRAEFIK_HTTPS_PORT}|g" \
         -e "s|%%MINIAPP_TRAEFIK_DASHBOARD_PORT%%|${MINIAPP_TRAEFIK_DASHBOARD_PORT}|g" \
-        -e "s|/var/run/podman/podman.sock|${TRAEFIK_USER_SOCKET}|g" \
+        -e "s|%%MINIAPP_TRAEFIK_PODMAN_SOCK%%|${MINIAPP_TRAEFIK_PODMAN_SOCK}|g" \
         traefik/templates/traefik-service.yaml.template > "$traefik_service_file"
     
     if [ ! -f "$traefik_service_file" ]; then

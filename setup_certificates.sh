@@ -7,6 +7,7 @@
 set -e  # Exit on any error
 
 # Configuration
+NEED_REGENERATE=false
 CERT_DIR="traefik/certs"
 BASE_DOMAIN="localtest.me"
 CERT_FILE="${CERT_DIR}/${BASE_DOMAIN}-cert.pem"
@@ -14,14 +15,12 @@ KEY_FILE="${CERT_DIR}/${BASE_DOMAIN}-key.pem"
 
 # Array of domains and subdomains
 domains=(
-    "localtest.me"
-    "*.localtest.me"
-    "traefik.localtest.me"
-    "api.localtest.me"
-    # Add more domains as needed
-    # "app.localtest.me"
-    # "db.localtest.me"
-    # etc
+    "$BASE_DOMAIN" 
+    "traefik.$BASE_DOMAIN" 
+    "backend.$BASE_DOMAIN" 
+    "api.$BASE_DOMAIN"
+    "frontend.$BASE_DOMAIN"
+    # Add more subdomains as needed
 )
 
 # Colors for output
@@ -77,6 +76,8 @@ create_cert_dir() {
     if [ ! -d "$CERT_DIR" ]; then
         print_status "Creating certificate directory: $CERT_DIR"
         mkdir -p "$CERT_DIR"
+    else
+        print_status "Certificate directory $CERT_DIR: exists"
     fi
 }
 
@@ -114,8 +115,13 @@ check_existing_certs() {
             need_regenerate=true
         fi
     fi
-    
-    echo "$need_regenerate"
+
+    print_status "Certs needs to be renewed: $need_regenerate"    
+
+    # pass the result to the  caller
+    # echo "$need_regenerate"
+    NEED_REGENERATE="$need_regenerate"
+
 }
 
 # Function to generate certificates
@@ -166,8 +172,14 @@ verify_certificates() {
         print_status "Certificate expires: $expiry_date"
         
         # Show covered domains
+        # print_status "Certificate covers the following domains:"
+        # openssl x509 -noout -text -in "$CERT_FILE" | grep -A 10 "Subject Alternative Name" | grep "DNS:" | sed 's/.*DNS://g' | sed 's/,.*//g' | sort | uniq || true
         print_status "Certificate covers the following domains:"
-        openssl x509 -noout -text -in "$CERT_FILE" | grep -A 10 "Subject Alternative Name" | grep "DNS:" | sed 's/.*DNS://g' | sed 's/,.*//g' | sort | uniq || true
+        openssl x509 -noout -text -in "$CERT_FILE" | \
+            grep -A 10 "Subject Alternative Name" | \
+            grep -o "DNS:[^,]*" | \
+            sed 's/DNS://g' | \
+            sort | uniq || true
     else
         print_error "Generated certificate is invalid!"
         exit 1
@@ -183,6 +195,8 @@ verify_certificates() {
 
 # Main execution
 main() {
+    #clear
+    print_status "RUNNING: ${0##*/}"
     print_status "Starting TLS certificate setup for local development..."
     print_status "Base domain: $BASE_DOMAIN"
     print_status "Domains to cover: ${domains[*]}"
@@ -196,14 +210,15 @@ main() {
     create_cert_dir
     
     # Check if we need to generate certificates
-    need_regenerate=$(check_existing_certs)
+    #NEED_REGENERATE=$(check_existing_certs)
+    check_existing_certs
     
-    if [ "$need_regenerate" = "true" ]; then
+    if [ "$NEED_REGENERATE" == "true" ]; then
         generate_certificates
         set_permissions
         verify_certificates
         echo
-        print_success "Certificate setup completed successfully!"
+        print_success "Certificate(s) setup completed successfully!"
     else
         print_success "Existing certificates are valid and up to date!"
     fi

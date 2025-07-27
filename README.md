@@ -1,4 +1,4 @@
-# Podman Traefik Fullstack Baseline
+# Podman v4, Traefik v2, Postgres - Fullstack Baseline
 
 ## 🎯 Purpose
 
@@ -48,6 +48,7 @@ su - dockeruser
 mkdir ~/myapp
 cd ~/myapp
 ```
+note: pls check setup_containers.sh which may required a directory pattern like "versionxx" as dirname.
 
 ### 2. Repository Setup
 ```bash
@@ -55,7 +56,7 @@ cd ~/myapp
 git init
 
 # Clone this repository
-git clone <this-repo-url> .
+git clone https://github.com/HornetGit/PODMAN_V4.x_DEV_STACK.git .
 
 # Verify directory structure
 tree .
@@ -90,6 +91,7 @@ tree .
 | **Backend API** | https://api.localtest.me:8443/ | REST API endpoints |
 | **Traefik Dashboard** | https://traefik.localtest.me:8443/dashboard/ | Proxy configuration |
 | **pgAdmin** | http://localhost:5050 | Database administration |
+Note: sudo nano /etc/hosts might be required to set the local DNS capability (adding '127.0.0.1 localtest.me api.localtest.me traefik.localtest.me').
 
 ### 6. Test the Application
 1. Open https://localtest.me:8443/

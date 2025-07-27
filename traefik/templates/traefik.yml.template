@@ -1,3 +1,7 @@
+global:
+  sendAnonymousUsage: false
+  checkNewVersion: false
+
 entryPoints:
   web:
     address: ":%%TRAEFIK_HTTP_PORT%%"
@@ -7,6 +11,34 @@ entryPoints:
 api:
   dashboard: true
   debug: true
+
+# Configuring Multiple Filters (DEMO mode: restrict or adjust as needed)
+# accessLog:
+#   filePath: "logs/access.log"
+#   format: json
+#   filters:
+#   statusCodes:
+#     - "200"
+#     - "300-302"
+#     - "400-500"
+#   retryAttempts: true
+#   minDuration: "10ms"
+
+# metrics:
+#   prometheus:
+#     entryPoint: web
+#     buckets:
+#       - "0.1"
+#       - "0.5"
+#       - "1"
+#       - "5"
+#       - "10"
+#       - "20"
+#       - "50"
+#       - "100"
+
+# tracing:
+#   serviceName: traefik
 
 providers:
   docker:

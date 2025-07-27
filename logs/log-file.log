@@ -1,0 +1,10 @@
+
+{"level":"warning","msg":"A new release of Traefik has been found: 3.4.3. Please consider updating.","time":"2025-07-01T04:34:52+02:00"}
+{"level":"info","msg":"I have to go...","time":"2025-07-01T04:39:23+02:00"}
+{"level":"info","msg":"Stopping server gracefully","time":"2025-07-01T04:39:23+02:00"}
+{"entryPointName":"websecure","level":"error","msg":"accept tcp [::]:8443: use of closed network connection","time":"2025-07-01T04:39:23+02:00"}
+{"entryPointName":"web","level":"error","msg":"accept tcp [::]:8080: use of closed network connection","time":"2025-07-01T04:39:23+02:00"}
+{"entryPointName":"web","level":"error","msg":"close tcp [::]:8080: use of closed network connection","time":"2025-07-01T04:39:23+02:00"}
+{"entryPointName":"websecure","level":"error","msg":"close tcp [::]:8443: use of closed network connection","time":"2025-07-01T04:39:23+02:00"}
+{"level":"info","msg":"Server stopped","time":"2025-07-01T04:39:37+02:00"}
+{"level":"info","msg":"Shutting down","time":"2025-07-01T04:39:37+02:00"}

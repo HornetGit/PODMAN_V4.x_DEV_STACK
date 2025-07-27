@@ -13,7 +13,9 @@ traefik:
     - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
     - ./traefik/certs:/etc/traefik/certs:ro  # ✅ Mount certificates
     - ./traefik/acme.json:/etc/traefik/acme/acme.json
-    - /var/run/podman/podman.sock:/var/run/docker.sock:ro
+    - %%MINIAPP_TRAEFIK_PODMAN_SOCK%%:/var/run/docker.sock:ro
+
+
   networks:
     - miniapp_public
   labels:
